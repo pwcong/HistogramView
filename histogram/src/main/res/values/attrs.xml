@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="HistogramView">
+
+        <attr name="textColor" format="color"/>
+        <attr name="axesColor" format="color"/>
+
+    </declare-styleable>
+
+
+
+</resources>
