@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
@@ -19,10 +20,11 @@ import me.pwcong.histogram.model.HistogramEntry;
  */
 public class HistogramView extends View {
 
-    public static int[] colors={0xff00b387,0xffff6666,0xff009fab,0xffffe500,0xff8192d6,0xff373e40,0xfff29f35,0xffa79496,0xffb8f788,0xffd9b3e6,0xffc9cabb};
+    public static int[] colors={0xff00b387,0xffff6666,0xff009fab,0xffffe500,0xff8192d6,0xff888888,0xfff29f35,0xffa79496,0xffb8f788,0xffd9b3e6,0xffc9cabb};
 
     ArrayList<HistogramEntry> entries;
-    boolean updated=false;
+
+    boolean updated         =   false;
 
     Paint paint;
 
@@ -38,19 +40,27 @@ public class HistogramView extends View {
     //柱状图边距
     float margin;
 
-
+    /*  以下为可更改变量   */
 
     //柱状图坐标轴箭头偏移量
-    float arrow0ffset   =   10;
+    float arrowSize             =   10.0f;
     //柱状图坐标轴粗度
-    float strokeWidth    =   3;
+    float strokeWidth           =   3.0f;
     //坐标系量词
-    String quantifierName;
+    String quantifierName       =   "";
     //坐标轴颜色
-    int axesColor = Color.BLACK;
+    int axesColor               =   Color.BLACK;
+    //坐标文字大小
+    float axesTextSize          =   25;
     //坐标轴文字颜色
-    int textColor = Color.BLACK;
+    int textColor               =   Color.BLACK;
 
+    //显示折线
+    boolean showLineChart       =   false;
+    //显示横线
+    boolean showHorizontalLine  =   false;
+    //线条间距
+    float lineSpacing           =   12.0f;
 
 
     //当前时间
@@ -111,10 +121,18 @@ public class HistogramView extends View {
 
         }
 
-        drawAxesRelationShip(canvas);
         drawEntry(canvas);
-        drawText(canvas);
 
+        if(showLineChart){
+            drawLineChart(canvas);
+        }
+
+        if(showHorizontalLine){
+            drawHorizontalLine(canvas);
+        }
+
+        drawText(canvas);
+        drawQuantifierName(canvas);
 
     }
 
@@ -139,27 +157,84 @@ public class HistogramView extends View {
         Path arrow=new Path();
 
         arrow.moveTo(margin,margin);
-        arrow.lineTo(margin-arrow0ffset,margin+arrow0ffset);
-        arrow.lineTo(margin,margin+arrow0ffset);
+        arrow.lineTo(margin- arrowSize,margin+ arrowSize);
+        arrow.lineTo(margin,margin+ arrowSize);
 
         arrow.moveTo(width-margin,height-margin);
-        arrow.lineTo(width-margin-arrow0ffset,height-margin+arrow0ffset);
-        arrow.lineTo(width-margin-arrow0ffset,height-margin);
+        arrow.lineTo(width-margin- arrowSize,height-margin+ arrowSize);
+        arrow.lineTo(width-margin- arrowSize,height-margin);
 
         canvas.drawPath(arrow,paint);
 
     }
 
-    private void drawAxesRelationShip(Canvas canvas){
+    private void drawQuantifierName(Canvas canvas){
 
         paint=new Paint();
         paint.setAntiAlias(true);
         paint.setColor(textColor);
-        paint.setTextSize(25);
+        paint.setTextSize(axesTextSize);
 
-        if(quantifierName!=null){
-            canvas.drawText(quantifierName,margin+2*strokeWidth,margin+25-strokeWidth,paint);
+        canvas.drawText(quantifierName,1.3f*margin,margin,paint);
+
+    }
+
+    private void drawLineChart(Canvas canvas){
+
+        paint=new Paint();
+        paint.setAntiAlias(true);
+        paint.setColor(axesColor);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(strokeWidth*0.5f);
+
+        paint.setPathEffect(new DashPathEffect(new float[]{lineSpacing,lineSpacing},1));
+
+
+        Path path=new Path();
+
+        path.moveTo((entries.get(0).getLeft()+entries.get(0).getRight())/2,
+                entries.get(0).getTop()+(height-margin-entries.get(0).getTop())*(1-1.0f*currentTimes/totalTimes));
+
+        for(int j=1;j<entries.size();j++) {
+
+            HistogramEntry entry = entries.get(j);
+
+            float pathX = (entry.getLeft() + entry.getRight()) / 2;
+            float pathY = entry.getTop() + (height - margin - entry.getTop()) * (1 - 1.0f * currentTimes / totalTimes);
+
+            path.lineTo(pathX, pathY);
         }
+
+        canvas.drawPath(path,paint);
+
+
+    }
+
+    private void drawHorizontalLine(Canvas canvas){
+
+        paint=new Paint();
+        paint.setAntiAlias(true);
+        paint.setColor(axesColor);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(strokeWidth*0.5f);
+
+        paint.setPathEffect(new DashPathEffect(new float[]{lineSpacing,lineSpacing},1));
+
+
+        Path path=new Path();
+
+        for(int i=0;i<entries.size();i++) {
+
+            HistogramEntry entry = entries.get(i);
+
+            float pathX = entry.getLeft();
+            float pathY = entry.getTop() + (height - margin - entry.getTop()) * (1 - 1.0f * currentTimes / totalTimes);
+
+            path.moveTo(margin,pathY);
+            path.lineTo(pathX, pathY);
+        }
+
+        canvas.drawPath(path,paint);
 
     }
 
@@ -207,6 +282,16 @@ public class HistogramView extends View {
 
         textColor = typedArray.getColor(R.styleable.HistogramView_textColor, Color.BLACK);
         axesColor = typedArray.getColor(R.styleable.HistogramView_axesColor,Color.BLACK);
+        axesTextSize = typedArray.getDimension(R.styleable.HistogramView_axesTextSize,25);
+        quantifierName = typedArray.getString(R.styleable.HistogramView_quantifierName);
+        arrowSize = typedArray.getFloat(R.styleable.HistogramView_arrowSize,10.0f);
+        strokeWidth = typedArray.getFloat(R.styleable.HistogramView_strokeWidth,3.0f);
+        showLineChart = typedArray.getBoolean(R.styleable.HistogramView_showLineChart,false);
+        showHorizontalLine = typedArray.getBoolean(R.styleable.HistogramView_showHorizontalLine,false);
+        lineSpacing = typedArray.getFloat(R.styleable.HistogramView_lineSpacing,12.0f);
+
+
+
 
     }
 
@@ -223,7 +308,6 @@ public class HistogramView extends View {
         margin=textSize*1.6f;
 
     }
-
 
     private void initData(){
 
@@ -255,11 +339,8 @@ public class HistogramView extends View {
      * 设置坐标系量词名称，即纵坐标关系名称
      * @param quantifierName String
      */
-    public void setAxesQuantifierName(String quantifierName){
-
+    public void setQuantifierName(String quantifierName){
         this.quantifierName=quantifierName;
-        postInvalidate();
-
     }
 
     /**
@@ -298,10 +379,10 @@ public class HistogramView extends View {
 
     /**
      * 设置坐标轴箭头偏移量
-     * @param arrow0ffset float
+     * @param arrowSize float
      */
-    public void setArrow0ffset(float arrow0ffset) {
-        this.arrow0ffset = arrow0ffset;
+    public void setArrowSize(float arrowSize) {
+        this.arrowSize = arrowSize;
     }
 
     /**
@@ -319,4 +400,40 @@ public class HistogramView extends View {
     public void setAxesColor(int axesColor) {
         this.axesColor = axesColor;
     }
+
+    /**
+     * 设置坐标轴文字大小
+     * @param axesTextSize float
+     */
+    public void setAxesTextSize(float axesTextSize) {
+        this.axesTextSize = axesTextSize;
+    }
+
+    /**
+     * 是否显示折线
+     * @param showLineChart boolean
+     */
+    public void setShowLineChart(boolean showLineChart) {
+        this.showLineChart = showLineChart;
+    }
+
+    /**
+     * 是否显示横线
+     * @param showHorizontalLine boolean
+     */
+    public void setShowHorizontalLine(boolean showHorizontalLine) {
+        this.showHorizontalLine = showHorizontalLine;
+    }
+
+    /**
+     * 虚线间距
+     * @param lineSpacing float
+     */
+    public void setLineSpacing(float lineSpacing) {
+        this.lineSpacing = lineSpacing;
+    }
+
+
+
+
 }

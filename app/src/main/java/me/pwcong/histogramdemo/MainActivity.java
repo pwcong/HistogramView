@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
 
         view= (HistogramView) findViewById(R.id.view);
         view.setData(getEntries());
-        view.setAxesQuantifierName("年龄/岁");
 
 
     }

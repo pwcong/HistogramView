@@ -9,6 +9,12 @@
     <me.pwcong.histogram.view.HistogramView
         app:textColor="#44615e"
         app:axesColor="#3e3740"
+        app:axesTextSize="20sp"
+        app:showHorizontalLine="true"
+        app:quantifierName="年龄/岁"
+        app:arrowSize="15"
+        app:strokeWidth="3"
+        app:lineSpacing="20"
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
