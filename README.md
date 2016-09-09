@@ -36,7 +36,7 @@ allprojects {
 
 # Usage
 
-Add it int your xml of Layout.
+Add it in your xml of Layout.
 
 ```
 <me.pwcong.histogram.view.HistogramView
