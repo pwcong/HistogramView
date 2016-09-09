@@ -100,6 +100,9 @@ And then add some datas. Especially that class of data must be `HistogramEntry` 
 
 # Recently
 
+## v1.0.2
+修改动画为非线性变化。
+
 ## v1.0.1
 增加折线和横线辅助显示功能，提供xml属性值修改。
 
