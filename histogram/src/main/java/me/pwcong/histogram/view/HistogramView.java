@@ -63,12 +63,13 @@ public class HistogramView extends View {
     float lineSpacing           =   12.0f;
 
 
-    //当前时间
-    long currentTimes=0;
+    //当前动作数值
+    long current=0;
+    //限制动作最大值
+    long increment=3;
     //延迟时间
     long delayTimes=10;
-    //动画总时间
-    long totalTimes=400;
+
 
 
     public HistogramView(Context context) {
@@ -114,11 +115,12 @@ public class HistogramView extends View {
             updated=true;
         }
 
-        if(currentTimes<totalTimes){
-
-            currentTimes+=delayTimes;
+        if(current<90){
+            current+=increment;
             postInvalidateDelayed(delayTimes);
-
+        }else {
+            current=90;
+            postInvalidateDelayed(delayTimes);
         }
 
         drawEntry(canvas);
@@ -181,6 +183,8 @@ public class HistogramView extends View {
 
     private void drawLineChart(Canvas canvas){
 
+        float ratio=(float)Math.sin(Math.toRadians(current));
+
         paint=new Paint();
         paint.setAntiAlias(true);
         paint.setColor(axesColor);
@@ -193,14 +197,14 @@ public class HistogramView extends View {
         Path path=new Path();
 
         path.moveTo((entries.get(0).getLeft()+entries.get(0).getRight())/2,
-                entries.get(0).getTop()+(height-margin-entries.get(0).getTop())*(1-1.0f*currentTimes/totalTimes));
+                entries.get(0).getTop()+(height-margin-entries.get(0).getTop())*(1-1.0f*ratio));
 
         for(int j=1;j<entries.size();j++) {
 
             HistogramEntry entry = entries.get(j);
 
             float pathX = (entry.getLeft() + entry.getRight()) / 2;
-            float pathY = entry.getTop() + (height - margin - entry.getTop()) * (1 - 1.0f * currentTimes / totalTimes);
+            float pathY = entry.getTop() + (height - margin - entry.getTop()) * (1 - 1.0f * ratio);
 
             path.lineTo(pathX, pathY);
         }
@@ -211,6 +215,8 @@ public class HistogramView extends View {
     }
 
     private void drawHorizontalLine(Canvas canvas){
+
+        float ratio=(float)Math.sin(Math.toRadians(current));
 
         paint=new Paint();
         paint.setAntiAlias(true);
@@ -228,7 +234,7 @@ public class HistogramView extends View {
             HistogramEntry entry = entries.get(i);
 
             float pathX = entry.getLeft();
-            float pathY = entry.getTop() + (height - margin - entry.getTop()) * (1 - 1.0f * currentTimes / totalTimes);
+            float pathY = entry.getTop() + (height - margin - entry.getTop()) * (1 - 1.0f * ratio);
 
             path.moveTo(margin,pathY);
             path.lineTo(pathX, pathY);
@@ -240,6 +246,8 @@ public class HistogramView extends View {
 
     private void drawText(Canvas canvas){
 
+        float ratio=(float)Math.sin(Math.toRadians(current));
+
         paint=new Paint();
         paint.setAntiAlias(true);
         paint.setColor(textColor);
@@ -249,7 +257,7 @@ public class HistogramView extends View {
 
             canvas.drawText(entry.getName(),entry.getLeft(),entry.getBottom()+2*(textOffset+strokeWidth),paint);
 
-            float valueTop=entry.getTop()+(height-margin-entry.getTop())*(1-1.0f*currentTimes/totalTimes)-textOffset;
+            float valueTop=entry.getTop()+(height-margin-entry.getTop())*(1-1.0f*ratio)-textOffset;
 
             canvas.drawText(String.valueOf(entry.getValue()),entry.getLeft(),valueTop,paint);
 
@@ -259,6 +267,8 @@ public class HistogramView extends View {
 
     private void drawEntry(Canvas canvas){
 
+        float ratio=(float)Math.sin(Math.toRadians(current));
+
         paint=new Paint();
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.FILL);
@@ -267,7 +277,7 @@ public class HistogramView extends View {
 
             paint.setColor(entry.getColor());
 
-            float rectTop=entry.getTop()+(height-margin-entry.getTop())*(1-1.0f*currentTimes/totalTimes);
+            float rectTop=entry.getTop()+(height-margin-entry.getTop())*(1-1.0f*ratio);
 
             canvas.drawRect(entry.getLeft(),rectTop,entry.getRight(),entry.getBottom(),paint);
 
@@ -290,6 +300,7 @@ public class HistogramView extends View {
         showHorizontalLine = typedArray.getBoolean(R.styleable.HistogramView_showHorizontalLine,false);
         lineSpacing = typedArray.getFloat(R.styleable.HistogramView_lineSpacing,12.0f);
 
+        typedArray.recycle();
 
 
 
@@ -367,14 +378,6 @@ public class HistogramView extends View {
      */
     public void setDelayTimes(long delayTimes) {
         this.delayTimes = delayTimes;
-    }
-
-    /**
-     * 设置动画总时间
-     * @param totalTimes long
-     */
-    public void setTotalTimes(long totalTimes) {
-        this.totalTimes = totalTimes;
     }
 
     /**
