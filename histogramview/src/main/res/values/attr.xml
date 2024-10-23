@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="HistogramView">
+        <attr name="text_color" format="color" />
+        <attr name="quantifier_name" format="string" />
+        <attr name="arrow_size" format="float" />
+        <attr name="axes_color" format="color" />
+        <attr name="axes_text_size" format="dimension" />
+        <attr name="show_line_chart" format="boolean" />
+        <attr name="show_horizontal_line" format="boolean" />
+        <attr name="line_spacing" format="float" />
+        <attr name="stroke_width" format="float" />
+    </declare-styleable>
+</resources>

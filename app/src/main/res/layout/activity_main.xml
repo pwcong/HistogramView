@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="me.pwcong.histogramdemo.MainActivity">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <me.pwcong.histogram.view.HistogramView
-        app:textColor="#44615e"
-        app:axesColor="#3e3740"
-        app:axesTextSize="20sp"
-        app:showHorizontalLine="true"
-        app:quantifierName="年龄/岁"
-        app:arrowSize="15"
-        app:strokeWidth="3"
-        app:lineSpacing="20"
+    <me.pwcong.histogramview.view.HistogramView
         android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:arrow_size="15"
+        app:axes_color="#3e3740"
+        app:axes_text_size="20sp"
+        app:line_spacing="20"
+        app:quantifier_name="年龄/岁"
+        app:show_horizontal_line="true"
+        app:stroke_width="3"
+        app:text_color="#44615e" />
 
 </LinearLayout>
