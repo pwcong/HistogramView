@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "me.pwcong.histogramviewdemo"
+    namespace = "com.github.pwcong.histogramviewdemo"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "me.pwcong.histogramviewdemo"
+        applicationId = "com.github.pwcong.histogramviewdemo"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

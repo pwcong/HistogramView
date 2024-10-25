@@ -20,7 +20,7 @@ see https://jitpack.io/#pwcong/HistogramView
 Add it in your xml of Layout.
 
 ```
-    <me.pwcong.histogramview.view.HistogramView
+    <com.github.pwcong.histogramview.view.HistogramView
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "me.pwcong.histogramview"
+    namespace = "com.github.pwcong.histogramview"
     compileSdk = 34
 
     defaultConfig {

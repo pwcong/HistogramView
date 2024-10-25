@@ -1,4 +1,4 @@
-package me.pwcong.histogramview
+package com.github.pwcong.histogramviewdemo
 
 import org.junit.Test
 

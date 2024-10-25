@@ -1,4 +1,4 @@
-package me.pwcong.histogramview.entry
+package com.github.pwcong.histogramview.entry
 
 class HistogramEntry(var name: String, var value: Float) {
     var color: Int = 0

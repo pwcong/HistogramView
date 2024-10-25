@@ -1,4 +1,4 @@
-package me.pwcong.histogramview.view
+package com.github.pwcong.histogramview.view
 
 import android.content.Context
 import android.graphics.Canvas
@@ -8,8 +8,8 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
 import android.view.View
-import me.pwcong.histogramview.R
-import me.pwcong.histogramview.entry.HistogramEntry
+import com.github.pwcong.histogramview.R
+import com.github.pwcong.histogramview.entry.HistogramEntry
 import kotlin.math.sin
 
 class HistogramView : View {

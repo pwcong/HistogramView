@@ -1,10 +1,10 @@
-package me.pwcong.histogramviewdemo
+package com.github.pwcong.histogramviewdemo
 
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import me.pwcong.histogramview.entry.HistogramEntry
-import me.pwcong.histogramview.view.HistogramView
+import com.github.pwcong.histogramview.entry.HistogramEntry
+import com.github.pwcong.histogramview.view.HistogramView
 
 
 class MainActivity : AppCompatActivity() {
